@@ -140,4 +140,8 @@ STATIC_URL = config['django']['STATIC_URL']
 MEDIA_ROOT = os.path.join(BASE_DIR, config['django']['MEDIA_ROOT'])
 MEDIA_URL = config['django']['MEDIA_URL']
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
 # from local_settings import *
