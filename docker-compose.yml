@@ -6,7 +6,7 @@ services:
       - ./resources/default.ini
       - ./resources/local.ini
     volumes:
-      - /opt/dpd/postgresql/data:/var/lib/postgresql/data
+      - /opt/dpad/postgresql/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
   web:
