@@ -14,7 +14,6 @@ services:
       - ./resources/default.ini
       - ./resources/local.ini
     build: .
-#    command: python3 manage.py runserver 0.0.0.0:8000
     command: /usr/sbin/apachectl -DFOREGROUND
     volumes:
       - .:/code
