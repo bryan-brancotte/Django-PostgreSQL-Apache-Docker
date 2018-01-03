@@ -29,14 +29,13 @@ config.optionxform = str
 for local_ini in locals_ini:
     if os.path.isfile(local_ini):
         config.read(local_ini)
-#     exec("%s=%s" % (key, config['django'][key]))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '()w5g$ei8xobl5ka1ehmcu22z#4h=*7zc&oip6&e(*=k#ew0p1'
+SECRET_KEY = config['django'].get('SECRET_KEY', '()w5g$ei8xobl5ka1ehmcu22z#4h=*7zc&oip6&e(*=k#ew0p1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
