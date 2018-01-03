@@ -1,0 +1,10 @@
+{% load static %}
+{% load i18n %}
+<h1>{% block title %}{{kind}} '{{ object.name }}'{% endblock %}</h1>
+
+{% block content%}
+<form action="" method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    <input type="submit" value="Confirm" class="btn btn-danger"/>
+</form>
+{% endblock content%}

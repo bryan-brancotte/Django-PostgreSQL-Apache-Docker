@@ -1,0 +1,7 @@
+{%load i18n %}
+<h1>{{ object }}</h1>
+<p>{{ object.last_name }}</p>
+<p>{{ object.first_name }}</p>
+<a href="{% url 'myapp:author-list' %}" role="button" class="btn btn-primary"><i class="fa fa-pencil"></i> {%trans 'Back'%}</a>
+<a href="{% url 'myapp:author-update' pk=object.pk %}" role="button" class="btn btn-primary"><i class="fa fa-pencil"></i> {%trans 'Update'%}</a>
+<a href="{% url 'myapp:author-delete' pk=object.pk %}" role="button" class="btn btn-danger"><i class="fa fa-trash"></i> {%trans 'Delete'%}</a>

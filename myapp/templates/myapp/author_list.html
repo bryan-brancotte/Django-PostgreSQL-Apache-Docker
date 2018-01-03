@@ -1,0 +1,9 @@
+<h1>Author</h1>
+<ul>
+{% for o in object_list %}
+    <li><a href="{%url 'myapp:author-detail' pk=o.pk %}">{{ o }}</a></li>
+{% empty %}
+    <li>No author yet.</li>
+{% endfor %}
+</ul>
+<a role="button" href="{%url 'myapp:author-create'%}" class="btn btn-primary pull-right">Add</a>

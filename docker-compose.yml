@@ -1,0 +1,28 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    env_file:
+      - ./resources/default.ini
+      - ./resources/local.ini
+    volumes:
+      - /opt/dpd/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    env_file:
+      - ./resources/default.ini
+      - ./resources/local.ini
+    build: .
+#    command: python3 manage.py runserver 0.0.0.0:8000
+    command: /usr/sbin/apachectl -DFOREGROUND
+    volumes:
+      - .:/code
+      - ./certs:/etc/apache2/ssl
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "8000:8000"
+      - "8080:80"
+      - "8443:443"
+    depends_on:
+      - db
