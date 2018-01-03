@@ -15,3 +15,14 @@ To change the folder, edit [docker-compose.yml](https://github.com/bryan-brancot
 ```
 docker-compose up
 ```
+
+## None-apache hosting
+
+Note that you can use the django server to host the project:
+```
+docker-compose run web runserver
+```
+which is a shortcut for
+```
+docker-compose run web python manage.py runserver 0.0.0.0:8000
+```
