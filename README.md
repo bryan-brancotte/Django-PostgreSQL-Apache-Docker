@@ -18,11 +18,38 @@ docker-compose up
 
 ## None-apache hosting
 
-Note that you can use the django server to host the project:
+You can simply start the web container (which will start the db) and 
+not use Apache. Once the container started you might want to have its ip:
 ```
-docker-compose run web runserver
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq) | head -n 1 
+```
+For the remaining of this section, we consider that you got 172.18.0.3
+
+
+### Using django web server
+You can use django to server the project:
+```
+docker-compose run web django
 ```
 which is a shortcut for
 ```
-docker-compose run web python manage.py runserver 0.0.0.0:8000
+docker-compose run web python manage.py runserver 0.0.0.0:80
 ```
+It will be served at [http://172.18.0.3](http://172.18.0.3)
+
+### Using gunicorn
+
+You can use gunicorn to serve in https the project:
+```
+docker-compose run web gunicorn
+```
+It will serve in https using the certs specified in default.ini/local.ini
+
+It will be served at [https://172.18.0.3](https://172.18.0.3)
+
+### No hosting, just a shell
+You can enter the container by typing
+```
+docker-compose run web bash
+```
+

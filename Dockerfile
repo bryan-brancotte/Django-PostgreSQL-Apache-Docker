@@ -18,7 +18,7 @@ RUN a2enmod \
         rewrite \
         expires \
         proxy_http \
-    && a2dissite 000-default
+ && a2dissite 000-default
 
 RUN mkdir /code
 WORKDIR /code
@@ -30,6 +30,6 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 COPY ./resources/django.conf /etc/apache2/sites-enabled/django.conf
 
 ADD requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 ADD . /code/

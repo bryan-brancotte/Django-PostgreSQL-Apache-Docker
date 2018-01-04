@@ -2,16 +2,18 @@
 
 cd /code
 
-echo "Applying database migrations"
+source resources/tool_shed.sh
+
+msg_info "Applying database migrations"
 python manage.py migrate
 
-echo "Compilling localization (.po -> .mo)"
+msg_info "Compilling localization (.po -> .mo)"
 python manage.py compilemessages
 
-echo "Collecting static files"
+msg_info "Collecting static files"
 python manage.py collectstatic --noinput
 
-echo "Compressing css files"
+msg_info "Compressing css files"
 if [ "$(pip freeze | grep csscompressor | wc -l )" == "1" ]; then
     for css_file in $(find $(python manage.py shell -c "from django.conf import settings; print(settings.STATIC_ROOT)") -name \*.css -print | grep -v .min.css); do
         ls -laH $css_file
@@ -20,25 +22,25 @@ if [ "$(pip freeze | grep csscompressor | wc -l )" == "1" ]; then
         touch -d "$d" $css_file
     done
 else
-    echo "csscompressor missing, passed"
+    msg_warning "csscompressor missing, passed"
 fi
 
 MEDIA_ROOT_DIR=$(python manage.py shell -c "from django.conf import settings; print(settings.MEDIA_ROOT)")
-echo "Creating media root at $MEDIA_ROOT_DIR"
+msg_info "Creating media root at $MEDIA_ROOT_DIR"
 if [ "$MEDIA_ROOT_DIR" != "" ]; then
     mkdir -p $MEDIA_ROOT_DIR
     chmod 777 $MEDIA_ROOT_DIR
 else
-    echo "settings.MEDIA_ROOT missing, passed"
+    msg_warning "settings.MEDIA_ROOT missing, passed"
 fi
 
 #Setting up cron tasks
-echo "Cron tasks"
+msg_info "Registering cron tasks"
 if [ "$(pip freeze | grep django-crontab | wc -l )" == "1" ]; then
     python manage.py crontab add
     service cron start
 else
-    echo "django-crontab missing, passed"
+    msg_warning "django-crontab missing, passed"
 fi
 
 #if [ "$1" == "loaddata" ]; then
@@ -47,9 +49,15 @@ fi
 #    python manage.py loaddata */fixtures/*.json
 #el
 if [ "$1" == "do_not_start" ]; then
-    echo "Entrypoint have been run successfully, we are not starting the project as requested"
-elif [ "$1" == "runserver" ]; then
-    exec python manage.py runserver 0.0.0.0:8000
+    msg_info "Entrypoint have been run successfully, we are not starting the project as requested"
+elif [ "$1" == "django" ]; then
+    exec python manage.py runserver 0.0.0.0:80
+elif [ "$1" == "gunicorn" ]; then
+    if [ "$(pip freeze | grep gunicorn | wc -l )" == "0" ]; then
+        msg_error "gunicorn not installed, we will install it but you should add it to your requirements.txt, it will be installed once for all during the build"
+        pip install gunicorn --no-cache-dir
+    fi
+    exec gunicorn composeexample.wsgi -b 0.0.0.0:443 --certfile certs/$CERT_NAME.crt --keyfile=certs/$CERT_NAME.key
 elif [ "$1" == "makemessages" ]; then
     exec python manage.py makemessages -l en --no-location
 else
