@@ -64,6 +64,7 @@ else
     rm -f /var/run/apache2/apache2.pid
     rm -rf /run/httpd/* /tmp/httpd*
     chmod -R 777 /tmp/* 2>/dev/null
+    echo "ServerName ${SERVER_NAME}" >> /etc/apache2/apache2.conf
     exec "$@"
 fi
 

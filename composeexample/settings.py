@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'myapp',
 ]
 
@@ -143,5 +144,12 @@ MEDIA_URL = config['global']['MEDIA_URL'] + '/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# django-crontab
+CRONJOBS = [
+    ('0 4 * * *', 'django.core.management.call_command', ['clearsessions']),
+]
+CRONTAB_LOCK_JOBS = True
+CRONTAB_COMMAND_SUFFIX = '>> /var/log/apache2/django-crontab.log'
 
 # from local_settings import *
